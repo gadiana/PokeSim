@@ -1,0 +1,19 @@
+/* Encounter transition: white flash, alternating black bar wipe, then the screen opens. Duration = --t-encounter. */
+
+.encounter-transition { position: fixed; inset: 0; z-index: 70; pointer-events: none; animation: encounter-out var(--t-encounter) linear forwards; }
+.encounter-flash { position: absolute; inset: 0; background: #fff; opacity: 0; animation: encounter-flash var(--t-encounter) linear forwards; }
+.encounter-bars { position: absolute; inset: 0; display: grid; grid-auto-rows: 1fr; }
+.encounter-bars i { background: #0d151c; transform: scaleX(0); transform-origin: left center; animation: encounter-bar var(--t-encounter) cubic-bezier(.6,0,.4,1) forwards; animation-delay: calc(var(--i) * 30ms); }
+.encounter-bars i:nth-child(even) { transform-origin: right center; }
+
+@keyframes encounter-flash { 0% { opacity: 0; } 5% { opacity: 1; } 10% { opacity: .2; } 15% { opacity: 1; } 22% { opacity: 0; } 100% { opacity: 0; } }
+@keyframes encounter-bar { 0%, 20% { transform: scaleX(0); } 60%, 100% { transform: scaleX(1); } }
+@keyframes encounter-out { 0%, 80% { opacity: 1; } 100% { opacity: 0; } }
+
+/* Reduced motion: no flash, just a fade through black. */
+@media (prefers-reduced-motion: reduce) {
+  .encounter-flash { display: none; }
+  .encounter-bars i { transform: none; animation: none; }
+  .encounter-transition { animation-name: encounter-fade; }
+  @keyframes encounter-fade { 0% { opacity: 0; } 30%, 75% { opacity: 1; } 100% { opacity: 0; } }
+}

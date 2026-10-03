@@ -1,0 +1,84 @@
+/* Design tokens, resets, header, and small shared pieces (Poké Ball mark, type tags, audio controls). */
+
+:root {
+  --ink: #17232e; --muted: #697680; --paper: #f5f1e8; --cream: #fffdfa; --line: #dcd8ce;
+  --red: #e65142; --red-dark: #c94337; --dark: #14212c; --teal: #1c3c40; --teal-light: #a6ded2;
+  --hp-healthy: #4fae74; --hp-warning: #e2ae3f; --hp-danger: #e65142;
+  --font-serif: 'Fraunces', Georgia, serif; --font-mono: 'DM Mono', monospace; --font-sans: 'DM Sans', Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+html { min-width: 320px; background: var(--paper); }
+body { margin: 0; min-width: 320px; font-family: var(--font-sans); }
+button, input { font: inherit; }
+button { cursor: pointer; }
+button:disabled { cursor: not-allowed; }
+:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.is-pixel { image-rendering: pixelated; }
+
+.app-shell { min-height: 100svh; color: var(--ink); background: radial-gradient(circle at 77% 0%, rgba(205,231,225,.72), transparent 29rem), var(--paper); overflow-x: clip; }
+.eyebrow { display: block; color: var(--red); font: 500 10px/1.4 var(--font-mono); letter-spacing: .13em; }
+
+/* Header */
+.topbar { height: 76px; padding: 0 clamp(20px,4vw,68px); border-bottom: 1px solid rgba(23,35,46,.12); display: flex; align-items: center; justify-content: space-between; gap: 12px; background: rgba(255,253,250,.82); backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 20; }
+.brand { border: 0; background: none; padding: 0; font: 700 20px/1 var(--font-mono); letter-spacing: -1px; color: var(--ink); display: flex; align-items: center; gap: 9px; }
+.brand > span:last-child span { color: var(--red); }
+nav { display: flex; height: 100%; gap: 29px; }
+nav button { background: none; border: 0; padding: 2px 0 0; color: var(--muted); font-weight: 600; font-size: 14px; position: relative; }
+nav button:hover { color: var(--ink); }
+nav button.active { color: var(--ink); }
+nav button.active::after { content: ''; height: 3px; border-radius: 4px; background: var(--red); position: absolute; bottom: 0; inset-inline: 0; }
+.top-actions { display: flex; align-items: center; gap: 18px; }
+.team-count { display: flex; align-items: center; gap: 8px; font-family: var(--font-mono); }
+.team-count span { color: var(--muted); font-size: 10px; letter-spacing: .1em; }
+.team-count strong { font-size: 16px; }
+.team-count em { font-style: normal; font-weight: 400; color: #8d989f; }
+
+/* Poké Ball mark */
+.pokeball-mark { width: 22px; height: 22px; border: 2px solid currentColor; display: inline-grid; place-items: center; border-radius: 50%; position: relative; color: var(--red); flex: 0 0 auto; }
+.pokeball-mark::before { content: ''; width: 100%; height: 2px; background: currentColor; position: absolute; left: 0; top: calc(50% - 1px); }
+.pokeball-mark i { position: relative; z-index: 1; background: var(--cream); width: 36%; height: 36%; border-radius: 50%; border: 2px solid currentColor; }
+
+/* Type tags (color comes from constants/typeColors.js via --type) */
+.type-row { display: flex; flex-wrap: wrap; gap: 4px; }
+.type-tag { --type: #7c8790; display: inline-flex; align-items: center; min-height: 18px; padding: 2px 6px; border-radius: 3px; background: color-mix(in srgb, var(--type) 13%, transparent); color: color-mix(in srgb, var(--type) 85%, black); text-transform: uppercase; font: 600 8px/1 var(--font-mono); letter-spacing: .04em; }
+.type-tag-solid { background: var(--type); color: #fff; }
+
+/* Shared button variants (components/common/Button.jsx) */
+.button-outline { flex: 0 0 auto; border: 1px solid var(--ink); background: transparent; padding: 10px 14px; font: 600 11px var(--font-mono); color: var(--ink); }
+.button-outline:hover:not(:disabled) { color: #fff; background: var(--ink); }
+
+.button-primary { display: inline-flex; align-items: center; gap: 9px; border: 1px solid var(--red); background: var(--red); padding: 10px 16px; color: #fff; font-weight: 700; font-size: 12px; }
+.button-primary .pokeball-mark { width: 18px; height: 18px; color: #fff; }
+.button-primary .pokeball-mark i { background: var(--red); }
+.button-primary:hover:not(:disabled) { background: var(--red-dark); border-color: var(--red-dark); }
+
+/* Audio controls */
+.audio-controls { position: relative; display: flex; align-items: center; gap: 4px; }
+.music-button, .audio-settings-toggle { border: 0; padding: 6px 8px; color: #4b6262; background: #e4eee8; border-radius: 3px; font: 500 9px var(--font-mono); letter-spacing: .03em; }
+.audio-settings-toggle { font-size: 12px; line-height: 1; padding: 4px 7px; }
+.music-button:hover, .audio-settings-toggle:hover, .audio-settings-toggle[aria-expanded='true'] { color: #fff; background: var(--ink); }
+.music-button.muted { color: #8e9697; background: transparent; box-shadow: inset 0 0 0 1px var(--line); }
+.audio-settings { position: absolute; top: calc(100% + 10px); right: 0; z-index: 30; width: 220px; padding: 14px; display: grid; gap: 12px; background: var(--cream); border: 1px solid var(--line); box-shadow: 8px 8px 0 rgba(23,35,46,.08); }
+.audio-settings label { display: grid; gap: 6px; }
+.audio-settings span { display: flex; justify-content: space-between; color: var(--muted); font: 600 9px var(--font-mono); letter-spacing: .06em; text-transform: uppercase; }
+.audio-settings b { color: var(--ink); }
+.audio-settings input { width: 100%; accent-color: var(--red); }
+
+.sprite-fallback { display: grid; place-items: center; color: #fff; background: #8ba8a4; border-radius: 50%; font: 700 30px var(--font-serif); }
+
+@media (max-width: 760px) {
+  .topbar { height: 64px; padding: 0 14px; }
+  .brand { font-size: 17px; }
+  nav { gap: 15px; }
+  nav button { font-size: 12px; }
+  .team-count span { display: none; }
+  .top-actions { gap: 10px; }
+  .music-button { padding: 5px 7px; font-size: 0; }
+  .music-button::first-letter { font-size: 14px; }
+}
+@media (max-width: 400px) {
+  .brand > span:last-child { display: none; }
+  nav { gap: 12px; }
+}

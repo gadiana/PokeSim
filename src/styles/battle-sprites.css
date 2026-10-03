@@ -1,0 +1,77 @@
+/* Battle sprites: crisp pixel scaling, platform + foot shadow, idle bob, and enter/attack/hit/faint/recall motions. */
+
+.sprite-slot {
+  --ground: 16px;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 4px 0 var(--ground);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+.sprite-slot-player { --ground: 14px; }
+
+/* Platform and shadow are centered on the feet line (bottom of the sprite). */
+.sprite-platform, .sprite-shadow { position: absolute; left: 50%; bottom: var(--ground); border-radius: 50%; transform: translate(-50%, 50%); pointer-events: none; }
+.sprite-platform { width: min(96%, calc(var(--sprite-w) * 1.55 + 40px)); aspect-ratio: 4 / 1; background: radial-gradient(ellipse at 50% 40%, rgba(236,255,244,.55), rgba(60,130,118,.35) 70%); box-shadow: 0 5px 0 rgba(26,82,74,.28), inset 0 -2px 0 rgba(255,255,255,.35); }
+.sprite-slot-opponent .sprite-platform { box-shadow: 0 7px 0 rgba(26,82,74,.32), inset 0 -2px 0 rgba(255,255,255,.4); }
+.sprite-shadow { width: calc(var(--sprite-w) * .82); aspect-ratio: 5 / 1; background: radial-gradient(ellipse, rgba(16,52,48,.42), rgba(16,52,48,0) 70%); }
+
+.sprite-motion { position: relative; z-index: 2; width: var(--sprite-w); line-height: 0; transform-origin: 50% 100%; }
+.sprite-button { display: block; padding: 0; border: 0; background: none; line-height: 0; }
+.sprite-button:focus-visible { outline-offset: 4px; }
+.sprite-bob { display: block; animation: idle-bob var(--t-bob) ease-in-out infinite; }
+.sprite-slot-opponent .sprite-bob { animation-delay: calc(var(--t-bob) / -2); }
+.sprite-img { display: block; max-width: none; image-rendering: pixelated; opacity: 0; }
+.sprite-slot.is-loaded .sprite-img { opacity: 1; }
+
+/* hidden */
+.anim-hidden .sprite-motion, .anim-hidden .sprite-shadow { visibility: hidden; opacity: 0; }
+
+/* enter: foe slides in from the right, player from the left */
+.anim-enter .sprite-motion { animation: enter-from-left var(--t-entrance) cubic-bezier(.2,.8,.3,1.1) both; }
+.sprite-slot-opponent.anim-enter .sprite-motion { animation-name: enter-from-right; }
+.anim-enter .sprite-shadow { animation: fade-in var(--t-entrance) ease-out both; }
+
+/* attack: lunge toward the target */
+.anim-attack .sprite-motion { animation: lunge-player var(--t-lunge) ease-out; }
+.sprite-slot-opponent.anim-attack .sprite-motion { animation-name: lunge-foe; }
+
+/* hit: blink three times */
+.anim-hit .sprite-img { animation: blink var(--t-blink) steps(1, end) 3; }
+
+/* faint: sink down and fade out */
+.anim-faint .sprite-motion { animation: faint var(--t-faint) ease-in forwards; }
+.anim-faint .sprite-shadow { animation: fade-out var(--t-faint) ease-in forwards; }
+.anim-faint .sprite-bob, .anim-recall .sprite-bob { animation: none; }
+
+/* recall: shrink into the Poké Ball */
+.anim-recall .sprite-motion { animation: recall var(--t-recall) ease-in forwards; }
+.anim-recall .sprite-shadow { animation: fade-out var(--t-recall) ease-in forwards; }
+
+@keyframes idle-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+@keyframes enter-from-left { from { transform: translateX(-140%); opacity: 0; } 60% { opacity: 1; } to { transform: none; opacity: 1; } }
+@keyframes enter-from-right { from { transform: translateX(140%); opacity: 0; } 60% { opacity: 1; } to { transform: none; opacity: 1; } }
+@keyframes lunge-player { 0%, 100% { transform: none; } 45% { transform: translate(26px, -12px); } }
+@keyframes lunge-foe { 0%, 100% { transform: none; } 45% { transform: translate(-26px, 12px); } }
+@keyframes blink { 0% { opacity: 0; } 50% { opacity: 1; } }
+@keyframes faint { from { transform: none; clip-path: inset(0); opacity: 1; } to { transform: translateY(70%); clip-path: inset(0 0 70% 0); opacity: 0; } }
+@keyframes recall { to { transform: scale(.15); opacity: 0; filter: brightness(3); } }
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fade-out { to { opacity: 0; } }
+
+@media (max-width: 600px) {
+  .sprite-slot { --ground: 12px; }
+  .sprite-slot-player { --ground: 10px; }
+}
+
+/* Reduced motion: no bob, lunge, or blink flashing; entrances/faints become plain fades. */
+@media (prefers-reduced-motion: reduce) {
+  .sprite-bob { animation: none; }
+  .anim-attack .sprite-motion { animation: none; }
+  .anim-enter .sprite-motion, .sprite-slot-opponent.anim-enter .sprite-motion { animation-name: fade-in; }
+  .anim-hit .sprite-img { animation: dim calc(var(--t-blink) * 3) ease-in-out; }
+  .anim-faint .sprite-motion, .anim-recall .sprite-motion { animation-name: fade-out; }
+  @keyframes dim { 50% { opacity: .45; } }
+}

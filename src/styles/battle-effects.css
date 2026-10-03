@@ -1,0 +1,69 @@
+/* Per-type hit effects (variants from constants/moveEffects.js) and the screen shake. Color comes from --fx. */
+
+.move-effect { --reach: calc(var(--sprite-w) * .5 + 16px); position: absolute; inset: -25%; z-index: 3; pointer-events: none; }
+.fx-flash { position: absolute; inset: 10%; border-radius: 50%; background: radial-gradient(circle, var(--fx) 0%, color-mix(in srgb, var(--fx) 40%, transparent) 35%, transparent 68%); opacity: 0; mix-blend-mode: screen; }
+.fx-ring { position: absolute; left: 50%; top: 50%; width: 40%; aspect-ratio: 1; border: 3px solid var(--fx); border-radius: 50%; opacity: 0; transform: translate(-50%, -50%) scale(.2); }
+.fx-particle { --angle: calc(var(--i) * 360deg / var(--count)); position: absolute; left: 50%; top: 50%; width: 10px; height: 10px; margin: -5px 0 0 -5px; border-radius: 50%; background: var(--fx); box-shadow: 0 0 8px var(--fx); opacity: 0; }
+
+/* burst — fire, poison, dragon: hot flash + embers flying up and out */
+.effect-burst .fx-flash { animation: flash-pulse var(--t-hit) ease-out; }
+.effect-burst .fx-particle { background: radial-gradient(circle, #fff3b0, var(--fx)); animation: ember var(--t-hit) ease-out calc(var(--i) * 18ms) both; }
+
+/* ripple — water, flying: expanding rings */
+.effect-ripple .fx-ring { animation: ripple var(--t-hit) ease-out; }
+.effect-ripple .fx-ring::before, .effect-ripple .fx-ring::after { content: ''; position: absolute; inset: -3px; border: inherit; border-radius: 50%; animation: ripple-inner var(--t-hit) ease-out calc(var(--t-hit) / 6) both; }
+.effect-ripple .fx-ring::after { animation-delay: calc(var(--t-hit) / 3); }
+.effect-ripple .fx-particle { width: 7px; height: 7px; background: color-mix(in srgb, var(--fx) 60%, white); animation: droplet var(--t-hit) ease-out both; }
+
+/* flicker — electric: strobing light + short sparks */
+.effect-flicker .fx-flash { animation: strobe var(--t-hit) steps(1, end); }
+.effect-flicker .fx-particle { width: 3px; height: 16px; margin: -8px 0 0 -1.5px; border-radius: 1px; animation: spark var(--t-hit) steps(4, end) both; }
+
+/* wave — psychic, ghost, dark: pulsing rings and a warped target */
+.effect-wave .fx-ring { border-width: 2px; animation: ripple var(--t-hit) ease-in-out 2; }
+.effect-wave .fx-flash { animation: flash-pulse var(--t-hit) ease-in-out; }
+.sprite-motion:has(.effect-wave) .sprite-bob { animation: warp var(--t-hit) ease-in-out; }
+
+/* leaves — grass, bug: leaf particles swirling outward */
+.effect-leaves .fx-particle { width: 12px; height: 7px; border-radius: 0 100%; box-shadow: none; animation: leaf var(--t-hit) ease-out calc(var(--i) * 25ms) both; }
+
+/* impact — normal, fighting: white flash with short rays */
+.effect-impact .fx-flash { inset: 18%; animation: flash-pulse calc(var(--t-hit) * .6) ease-out; }
+.effect-impact .fx-ring { border-width: 5px; animation: ripple calc(var(--t-hit) * .6) ease-out; }
+.effect-impact .fx-particle { width: 4px; height: 18px; margin: -9px 0 0 -2px; border-radius: 2px; animation: ray calc(var(--t-hit) * .6) ease-out both; }
+
+/* shards — ice, rock, ground, steel: angular fragments */
+.effect-shards .fx-particle { border-radius: 1px; box-shadow: none; clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); width: 12px; height: 12px; animation: shard var(--t-hit) cubic-bezier(.2,.7,.3,1) both; }
+.effect-shards .fx-flash { animation: flash-pulse calc(var(--t-hit) * .5) ease-out; }
+
+/* sparkle — fairy and status moves: twinkling stars drifting up */
+.effect-sparkle .fx-particle { width: 12px; height: 12px; border-radius: 0; box-shadow: none; clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%); animation: sparkle var(--t-hit) ease-out calc(var(--i) * 40ms) both; }
+
+@keyframes flash-pulse { 0% { opacity: 0; transform: scale(.4); } 25% { opacity: 1; } 100% { opacity: 0; transform: scale(1.15); } }
+@keyframes strobe { 0%, 30%, 60% { opacity: 1; } 15%, 45%, 75%, 100% { opacity: 0; } }
+@keyframes ripple { 0% { opacity: 1; transform: translate(-50%, -50%) scale(.2); } 100% { opacity: 0; transform: translate(-50%, -50%) scale(2.2); } }
+@keyframes ripple-inner { 0% { opacity: 1; transform: scale(.3); } 100% { opacity: 0; transform: scale(1.4); } }
+@keyframes ember { 0% { opacity: 1; transform: rotate(var(--angle)) translateY(-8px) scale(1); } 100% { opacity: 0; transform: translateY(-30px) rotate(var(--angle)) translateY(calc(var(--reach) * -1)) scale(.3); } }
+@keyframes droplet { 0% { opacity: 0; transform: rotate(var(--angle)) translateY(-20px); } 30% { opacity: 1; } 100% { opacity: 0; transform: rotate(var(--angle)) translateY(calc(var(--reach) * -1.05)) scale(.5); } }
+@keyframes spark { 0% { opacity: 1; transform: rotate(var(--angle)) translateY(-14px); } 50% { opacity: 0; } 75% { opacity: 1; } 100% { opacity: 0; transform: rotate(calc(var(--angle) + 20deg)) translateY(calc(var(--reach) * -.8)); } }
+@keyframes warp { 0%, 100% { transform: none; filter: none; } 25% { transform: skewX(8deg) scaleX(1.06); filter: hue-rotate(60deg); } 50% { transform: skewX(-8deg) scaleX(.95); filter: hue-rotate(-40deg) brightness(1.2); } 75% { transform: skewX(4deg); } }
+@keyframes leaf { 0% { opacity: 0; transform: rotate(var(--angle)) translateY(-6px) rotate(0); } 20% { opacity: 1; } 100% { opacity: 0; transform: rotate(calc(var(--angle) + 120deg)) translateY(calc(var(--reach) * -1)) rotate(540deg); } }
+@keyframes ray { 0% { opacity: 1; transform: rotate(var(--angle)) translateY(-16px) scaleY(.4); } 100% { opacity: 0; transform: rotate(var(--angle)) translateY(calc(var(--reach) * -.9)) scaleY(1.2); } }
+@keyframes shard { 0% { opacity: 1; transform: rotate(var(--angle)) translateY(-4px) rotate(0); } 100% { opacity: 0; transform: rotate(var(--angle)) translateY(calc(var(--reach) * -1.1)) rotate(220deg) scale(.6); } }
+@keyframes sparkle { 0% { opacity: 0; transform: rotate(var(--angle)) translateY(-14px) scale(.3); } 40% { opacity: 1; transform: rotate(var(--angle)) translateY(calc(var(--reach) * -.6)) scale(1.1); } 100% { opacity: 0; transform: rotate(var(--angle)) translateY(calc(var(--reach) * -.8)) translateX(-18px) scale(.4); } }
+
+/* Screen shake on super-effective hits and critical hits */
+.battle-arena.is-shaking { animation: arena-shake var(--t-shake) linear; }
+@keyframes arena-shake {
+  0%, 100% { transform: none; }
+  15% { transform: translate(-6px, 2px); } 30% { transform: translate(5px, -3px); } 45% { transform: translate(-4px, 3px); }
+  60% { transform: translate(4px, -1px); } 75% { transform: translate(-2px, 1px); } 90% { transform: translate(1px, 0); }
+}
+
+/* Reduced motion: no shake, no flashes or strobes; particles simply fade. */
+@media (prefers-reduced-motion: reduce) {
+  .battle-arena.is-shaking { animation: none; }
+  .fx-flash { display: none; }
+  .sprite-motion:has(.effect-wave) .sprite-bob { animation: none; }
+  .fx-particle, .fx-ring { animation-name: fade-out !important; animation-timing-function: ease-out !important; }
+}

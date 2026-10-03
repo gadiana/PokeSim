@@ -1,0 +1,37 @@
+/* Battle page layout: heading, screen grid (arena / dialogue / actions), status screens, and footnote. */
+
+.battle-page { max-width: 1120px; margin: auto; padding: clamp(26px,4vw,52px) clamp(14px,4vw,40px) 36px; }
+.battle-heading { display: flex; justify-content: space-between; align-items: end; gap: 12px; margin: 0 0 20px; }
+.battle-heading h1 { font: 700 clamp(32px,4.2vw,54px)/.98 var(--font-serif); letter-spacing: -2.4px; margin: 8px 0 0; }
+
+/* Fixed zones — nothing is positioned by guessing pixel offsets. */
+.battle-screen {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-areas: 'arena arena' 'dialogue actions';
+  gap: 12px;
+}
+.battle-screen > .battle-arena { grid-area: arena; }
+.battle-screen > .dialogue-wrap { grid-area: dialogue; }
+.battle-screen > .battle-actions { grid-area: actions; display: grid; gap: 10px; align-content: start; }
+
+/* Placeholder screens (empty / searching / error) */
+.empty-battle { max-width: 550px; margin: 13vh auto; text-align: center; }
+.empty-battle > .pokeball-mark { width: 42px; height: 42px; margin-bottom: 10px; }
+.empty-battle.status-loading > .pokeball-mark { animation: ball-wobble 1s ease-in-out infinite; }
+.empty-battle h1 { margin: 9px 0; font: 700 clamp(36px,5vw,60px)/1 var(--font-serif); letter-spacing: -2.4px; }
+.empty-battle p { max-width: 400px; margin: 0 auto 22px; color: var(--muted); line-height: 1.6; }
+.empty-actions { display: flex; justify-content: center; gap: 10px; }
+
+.battle-note { margin: 13px 2px; color: var(--muted); font-size: 10px; line-height: 1.5; }
+
+@keyframes ball-wobble { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-18deg); } 75% { transform: rotate(18deg); } }
+
+@media (max-width: 760px) {
+  .battle-screen { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'arena' 'dialogue' 'actions'; gap: 9px; }
+  .battle-heading { align-items: flex-start; }
+  .battle-heading h1 { font-size: 30px; letter-spacing: -1.5px; }
+  .battle-heading .button-outline { padding: 8px 10px; font-size: 10px; }
+  .empty-battle { margin: 14vh auto; padding: 0 15px; }
+}
+@media (prefers-reduced-motion: reduce) { .empty-battle.status-loading > .pokeball-mark { animation: none; } }

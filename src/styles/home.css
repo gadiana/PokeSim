@@ -1,0 +1,73 @@
+/* Landing page: hero copy, call-to-action buttons, stats, and the illustrated arena visual. */
+
+.landing-page { min-height: calc(100svh - 76px); max-width: 1500px; margin: auto; padding: clamp(43px,7vw,112px) clamp(26px,7vw,112px) 72px; display: grid; grid-template-columns: minmax(310px,.9fr) minmax(360px,1.1fr); align-items: center; gap: clamp(38px,7vw,120px); position: relative; }
+.landing-page::before { content: ''; position: absolute; inset: 0 0 auto; height: 1px; background: linear-gradient(90deg, transparent, rgba(23,35,46,.12), transparent); }
+.landing-copy { position: relative; z-index: 2; }
+.landing-kicker { margin: 14px 0 4px; color: #53686a; font: 600 12px var(--font-mono); }
+.landing-copy h1 { margin: 0; font: 700 clamp(59px,7.1vw,108px)/.84 var(--font-serif); letter-spacing: -6px; }
+.landing-copy h1 i { color: var(--red); }
+.landing-summary { max-width: 460px; margin: 28px 0 27px; color: var(--muted); font-size: 16px; line-height: 1.7; }
+.landing-actions { display: flex; align-items: center; gap: 18px; }
+.landing-cta { min-height: 53px; border: 1px solid var(--red); padding: 0 17px; color: #fff; background: var(--red); display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 13px; transition: transform .15s, background .15s; }
+.landing-cta .pokeball-mark { color: #fff; }
+.landing-cta .pokeball-mark i { background: var(--red); }
+.landing-cta span { margin-left: 8px; font-size: 20px; line-height: 1; transition: transform .15s; }
+.landing-cta:hover { background: var(--red-dark); }
+.landing-cta:hover span { transform: translateX(4px); }
+.landing-ghost { border: 0; color: var(--ink); background: none; padding: 12px 0; font-weight: 700; font-size: 12px; }
+.landing-ghost:hover { color: var(--red); }
+.landing-stats { display: flex; margin-top: 45px; }
+.landing-stats div { min-width: 110px; padding: 0 17px; border-left: 1px solid var(--line); }
+.landing-stats div:first-child { padding-left: 0; border-left: 0; }
+.landing-stats b, .landing-stats span { display: block; }
+.landing-stats b { font: 700 24px/1 var(--font-serif); }
+.landing-stats span { margin-top: 5px; color: var(--muted); font-size: 9px; }
+
+.landing-visual { min-height: 490px; overflow: hidden; position: relative; border: 1px solid rgba(33,69,68,.25); background: linear-gradient(148deg, #bce2d8 0%, #a0d1ce 48%, #70aca2 48.2%, #396c69 100%); box-shadow: 18px 18px 0 rgba(47,75,70,.12); }
+.landing-visual::before { content: ''; position: absolute; inset: 0; opacity: .32; background-image: linear-gradient(rgba(255,255,255,.26) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.26) 1px, transparent 1px); background-size: 30px 30px; }
+.landing-sun { position: absolute; width: 310px; aspect-ratio: 1; top: 49px; left: 50%; transform: translateX(-50%); border-radius: 50%; background: #fae8a9; opacity: .87; }
+.orbit { position: absolute; left: 50%; top: 50%; border: 1px solid rgba(255,255,255,.6); border-radius: 50%; transform: translate(-50%,-50%) rotate(-18deg); }
+.orbit-one { width: 440px; height: 178px; }
+.orbit-two { width: 315px; height: 390px; }
+.landing-ball { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); color: rgba(255,253,250,.68); }
+.landing-ball .pokeball-mark { width: 97px; height: 97px; border-width: 5px; }
+.landing-ball .pokeball-mark::before { height: 5px; top: calc(50% - 2.5px); }
+.landing-ball .pokeball-mark i { border-width: 5px; background: #b8e0d8; }
+.landing-mon { position: absolute; z-index: 2; filter: drop-shadow(0 18px 10px rgba(14,54,52,.24)); animation: hero-float 4s ease-in-out infinite; }
+.landing-sprite { width: 100%; height: 100%; object-fit: contain; }
+.mon-0 { width: 250px; height: 250px; bottom: 19px; left: 29px; --tilt: -7deg; }
+.mon-1 { width: 170px; height: 170px; top: 48px; right: 24px; --tilt: 5deg; animation-delay: -1.3s; }
+.mon-2 { width: 185px; height: 185px; bottom: 30px; right: 13px; --tilt: 7deg; animation-delay: -2.6s; }
+.landing-loading { position: absolute; z-index: 2; top: 50%; left: 50%; transform: translate(-50%,-50%); color: #3d726d; text-align: center; font: 500 11px/1.6 var(--font-mono); }
+.visual-caption { position: absolute; z-index: 3; bottom: 17px; left: 19px; display: grid; gap: 4px; color: #e6fffa; }
+.visual-caption span { font: 500 8px var(--font-mono); letter-spacing: .13em; }
+.visual-caption b { font: 600 12px var(--font-sans); }
+.landing-rules { grid-column: 1 / -1; display: flex; justify-content: space-between; padding-top: 20px; border-top: 1px solid var(--line); color: #567172; font: 600 10px var(--font-mono); letter-spacing: .04em; }
+.landing-rules p { margin: 0; }
+.landing-rules i { color: var(--red); font-style: normal; padding: 0 5px; }
+
+@keyframes hero-float { 0%, 100% { transform: rotate(var(--tilt)) translateY(0); } 50% { transform: rotate(var(--tilt)) translateY(-8px); } }
+
+@media (max-width: 1050px) {
+  .landing-page { grid-template-columns: minmax(280px,.9fr) minmax(310px,1.1fr); gap: 45px; padding-inline: 45px; }
+  .landing-copy h1 { font-size: clamp(57px,7vw,84px); }
+}
+@media (max-width: 760px) {
+  .landing-page { min-height: calc(100svh - 64px); padding: 38px 21px 42px; display: flex; flex-direction: column; align-items: stretch; gap: 35px; }
+  .landing-copy h1 { font-size: 62px; letter-spacing: -4px; }
+  .landing-summary { margin: 20px 0 22px; font-size: 14px; }
+  .landing-stats { margin-top: 34px; }
+  .landing-stats div { min-width: 0; flex: 1; padding: 0 12px; }
+  .landing-stats b { font-size: 20px; }
+  .landing-visual { min-height: 345px; box-shadow: 9px 9px 0 rgba(47,75,70,.12); }
+  .landing-sun { width: 225px; top: 30px; }
+  .orbit-one { width: 320px; height: 125px; }
+  .orbit-two { width: 210px; height: 275px; }
+  .landing-ball .pokeball-mark { width: 65px; height: 65px; border-width: 4px; }
+  .mon-0 { width: 185px; height: 185px; bottom: 6px; left: 12px; }
+  .mon-1 { width: 125px; height: 125px; top: 21px; right: 6px; }
+  .mon-2 { width: 136px; height: 136px; bottom: 11px; right: -7px; }
+  .landing-rules { display: block; text-align: center; padding-top: 16px; line-height: 1.8; }
+  .landing-rules p { margin-top: 6px; font-size: 8px; }
+}
+@media (prefers-reduced-motion: reduce) { .landing-mon { animation: none; transform: rotate(var(--tilt)); } }
